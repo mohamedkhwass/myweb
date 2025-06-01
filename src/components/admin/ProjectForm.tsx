@@ -4,14 +4,25 @@ import { motion } from 'framer-motion';
 import { Save, X } from 'lucide-react';
 import ImageManager from './ImageManager';
 
+interface ProjectFormData {
+  title: string;
+  description: string;
+  technologies: string;
+  category: string;
+  live_url: string;
+  github_url: string;
+  featured: boolean;
+  images: string[];
+}
+
 interface ProjectFormProps {
-  formData: any;
-  setFormData: (data: any) => void;
+  formData: ProjectFormData;
+  setFormData: (data: ProjectFormData) => void;
   onSubmit: (e: React.FormEvent) => void;
   onCancel: () => void;
   onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   uploadingImage: boolean;
-  editingProject: any;
+  editingProject: unknown;
 }
 
 const ProjectForm = ({

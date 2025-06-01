@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Edit, Trash2, Save, X, Upload, User, Settings, BarChart3, FolderOpen, LogOut } from 'lucide-react';
+import { Plus, Edit, Trash2, Save, X, User, Settings, BarChart3, FolderOpen, LogOut } from 'lucide-react';
 import { projectsAPI, skillsAPI, personalInfoAPI, Project, Skill, PersonalInfo, supabase } from '@/lib/supabase';
 import ProjectForm from '@/components/admin/ProjectForm';
 import AuthGuard from '@/components/AuthGuard';
@@ -14,7 +14,7 @@ const AdminPage = () => {
   const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
   const [skills, setSkills] = useState<Skill[]>([]);
-  const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null);
+  const [, setPersonalInfo] = useState<PersonalInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -217,7 +217,7 @@ const AdminPage = () => {
       live_url: project.live_url || '',
       github_url: project.github_url || '',
       featured: project.featured,
-      images: (project as any).images || []
+      images: (project as Project & { images?: string[] }).images || []
     });
     setShowAddForm(true);
   };
@@ -408,10 +408,10 @@ const AdminPage = () => {
                 </p>
 
                 {/* Project Images Preview */}
-                {(project as any).images && (project as any).images.length > 0 && (
+                {(project as Project & { images?: string[] }).images && (project as Project & { images?: string[] }).images!.length > 0 && (
                   <div className="mb-3">
                     <div className="flex space-x-2 rtl:space-x-reverse overflow-x-auto">
-                      {(project as any).images.slice(0, 3).map((imageUrl: string, index: number) => (
+                      {(project as Project & { images?: string[] }).images!.slice(0, 3).map((imageUrl: string, index: number) => (
                         <div key={index} className="flex-shrink-0">
                           <img
                             src={imageUrl}
@@ -420,10 +420,10 @@ const AdminPage = () => {
                           />
                         </div>
                       ))}
-                      {(project as any).images.length > 3 && (
+                      {(project as Project & { images?: string[] }).images!.length > 3 && (
                         <div className="flex-shrink-0 w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded border border-gray-300 dark:border-gray-600 flex items-center justify-center">
                           <span className="text-xs text-gray-600 dark:text-gray-400">
-                            +{(project as any).images.length - 3}
+                            +{(project as Project & { images?: string[] }).images!.length - 3}
                           </span>
                         </div>
                       )}

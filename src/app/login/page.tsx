@@ -33,7 +33,8 @@ const LoginPage = () => {
       if (data.user) {
         router.push('/admin');
       }
-    } catch (err) {
+    } catch (error) {
+      console.error('Login error:', error);
       setError('حدث خطأ أثناء تسجيل الدخول');
     } finally {
       setLoading(false);
@@ -63,7 +64,8 @@ const LoginPage = () => {
       if (data.user) {
         alert('تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.');
       }
-    } catch (err) {
+    } catch (error) {
+      console.error('Signup error:', error);
       setError('حدث خطأ أثناء إنشاء الحساب');
     } finally {
       setLoading(false);

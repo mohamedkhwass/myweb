@@ -47,8 +47,8 @@ const Projects = () => {
   const prevImage = (projectId: number, images: string[]) => {
     console.log('Previous image clicked for project:', projectId);
     const current = currentImageIndex[projectId] || 0;
-    const prev = current === 0 ? images.length - 1 : current - 1;
-    setCurrentImageIndex(prev => ({ ...prev, [projectId]: prev }));
+    const prevIndex = current === 0 ? images.length - 1 : current - 1;
+    setCurrentImageIndex(prev => ({ ...prev, [projectId]: prevIndex }));
   };
 
   const openImageModal = (imageUrl: string) => {
