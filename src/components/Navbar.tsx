@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import Link from 'next/link';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,11 +20,12 @@ const Navbar = () => {
   }, []);
 
   const navItems = [
-    { name: 'الرئيسية', href: '#home' },
-    { name: 'عني', href: '#about' },
-    { name: 'مشاريعي', href: '#projects' },
-    { name: 'مهاراتي', href: '#skills' },
-    { name: 'تواصل معي', href: '#contact' },
+    { name: 'الرئيسية', href: '/', type: 'link' },
+    { name: 'عني', href: '#about', type: 'anchor' },
+    { name: 'مشاريعي', href: '/projects', type: 'link' },
+    { name: 'مهاراتي', href: '#skills', type: 'anchor' },
+    { name: 'تواصل معي', href: '#contact', type: 'anchor' },
+    { name: 'لوحة التحكم', href: '/admin', type: 'link' },
   ];
 
   return (
@@ -52,15 +54,27 @@ const Navbar = () => {
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8 rtl:space-x-reverse">
               {navItems.map((item) => (
-                <motion.a
-                  key={item.name}
-                  href={item.href}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-                >
-                  {item.name}
-                </motion.a>
+                item.type === 'link' ? (
+                  <Link key={item.name} href={item.href}>
+                    <motion.span
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 cursor-pointer"
+                    >
+                      {item.name}
+                    </motion.span>
+                  </Link>
+                ) : (
+                  <motion.a
+                    key={item.name}
+                    href={item.href}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                  >
+                    {item.name}
+                  </motion.a>
+                )
               ))}
             </div>
           </div>
@@ -86,15 +100,27 @@ const Navbar = () => {
       >
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
           {navItems.map((item) => (
-            <motion.a
-              key={item.name}
-              href={item.href}
-              whileHover={{ x: 10 }}
-              onClick={() => setIsOpen(false)}
-              className="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
-            >
-              {item.name}
-            </motion.a>
+            item.type === 'link' ? (
+              <Link key={item.name} href={item.href}>
+                <motion.span
+                  whileHover={{ x: 10 }}
+                  onClick={() => setIsOpen(false)}
+                  className="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 cursor-pointer"
+                >
+                  {item.name}
+                </motion.span>
+              </Link>
+            ) : (
+              <motion.a
+                key={item.name}
+                href={item.href}
+                whileHover={{ x: 10 }}
+                onClick={() => setIsOpen(false)}
+                className="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
+              >
+                {item.name}
+              </motion.a>
+            )
           ))}
         </div>
       </motion.div>
