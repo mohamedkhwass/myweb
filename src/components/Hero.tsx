@@ -1,9 +1,28 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowDown, Github, Linkedin, Mail } from 'lucide-react';
+import { personalInfoAPI, PersonalInfo } from '@/lib/supabase';
 
 const Hero = () => {
+  const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPersonalInfo();
+  }, []);
+
+  const fetchPersonalInfo = async () => {
+    try {
+      const data = await personalInfoAPI.get();
+      setPersonalInfo(data);
+    } catch (error) {
+      console.error('Error fetching personal info:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -61,10 +80,12 @@ const Hero = () => {
           <motion.div variants={itemVariants} className="space-y-4">
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white">
               مرحباً، أنا{' '}
-              <span className="gradient-text">محمد علي خواص</span>
+              <span className="gradient-text">
+                {loading ? 'محمد علي خواص' : (personalInfo?.name || 'محمد علي خواص')}
+              </span>
             </h1>
             <h2 className="text-xl md:text-2xl lg:text-3xl text-gray-600 dark:text-gray-300 font-medium">
-              مهندس برمجيات متخصص في Flutter
+              {loading ? 'مهندس برمجيات متخصص في Flutter' : (personalInfo?.title || 'مهندس برمجيات متخصص في Flutter')}
             </h2>
           </motion.div>
 
@@ -73,9 +94,10 @@ const Hero = () => {
             variants={itemVariants}
             className="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed"
           >
-            مطور Flutter متحمس مع خلفية في تطوير Android. بدأت رحلتي التقنية مع Android باستخدام Java،
-            ثم انتقلت إلى تطوير الواجهة الخلفية وربطها مع تطبيقات Flutter لإنتاج تطبيقات أكثر قوة ومتانة.
-            ملتزم بالبقاء في المقدمة التقنية وشغوف بالتطوير الذاتي.
+            {loading ?
+              'مطور Flutter متحمس مع خلفية في تطوير Android. بدأت رحلتي التقنية مع Android باستخدام Java، ثم انتقلت إلى تطوير الواجهة الخلفية وربطها مع تطبيقات Flutter لإنتاج تطبيقات أكثر قوة ومتانة. ملتزم بالبقاء في المقدمة التقنية وشغوف بالتطوير الذاتي.' :
+              (personalInfo?.description || 'مطور Flutter متحمس مع خلفية في تطوير Android. بدأت رحلتي التقنية مع Android باستخدام Java، ثم انتقلت إلى تطوير الواجهة الخلفية وربطها مع تطبيقات Flutter لإنتاج تطبيقات أكثر قوة ومتانة. ملتزم بالبقاء في المقدمة التقنية وشغوف بالتطوير الذاتي.')
+            }
           </motion.p>
 
           {/* Social Links */}
@@ -84,9 +106,21 @@ const Hero = () => {
             className="flex justify-center space-x-6 rtl:space-x-reverse"
           >
             {[
-              { icon: Github, href: 'https://github.com/mohamedalikwass', label: 'GitHub' },
-              { icon: Linkedin, href: 'https://linkedin.com/in/mohamedalikwass', label: 'LinkedIn' },
-              { icon: Mail, href: 'mailto:mohamedalikwass@gmail.com', label: 'Email' },
+              {
+                icon: Github,
+                href: loading ? 'https://github.com/mohamedalikwass' : (personalInfo?.github_url || 'https://github.com/mohamedalikwass'),
+                label: 'GitHub'
+              },
+              {
+                icon: Linkedin,
+                href: loading ? 'https://linkedin.com/in/mohamedalikwass' : (personalInfo?.linkedin_url || 'https://linkedin.com/in/mohamedalikwass'),
+                label: 'LinkedIn'
+              },
+              {
+                icon: Mail,
+                href: loading ? 'mailto:mohamedalikwass@gmail.com' : `mailto:${personalInfo?.email || 'mohamedalikwass@gmail.com'}`,
+                label: 'Email'
+              },
             ].map((social) => (
               <motion.a
                 key={social.label}

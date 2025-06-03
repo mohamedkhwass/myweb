@@ -2,7 +2,8 @@
 
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { personalInfoAPI, PersonalInfo } from '@/lib/supabase';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +12,24 @@ const Contact = () => {
     subject: '',
     message: ''
   });
+
+  const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPersonalInfo();
+  }, []);
+
+  const fetchPersonalInfo = async () => {
+    try {
+      const data = await personalInfoAPI.get();
+      setPersonalInfo(data);
+    } catch (error) {
+      console.error('Error fetching personal info:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -31,19 +50,19 @@ const Contact = () => {
     {
       icon: Mail,
       title: 'البريد الإلكتروني',
-      value: 'mohamedalikwass@gmail.com',
-      href: 'mailto:mohamedalikwass@gmail.com'
+      value: loading ? 'mohamedalikwass@gmail.com' : (personalInfo?.email || 'mohamedalikwass@gmail.com'),
+      href: loading ? 'mailto:mohamedalikwass@gmail.com' : `mailto:${personalInfo?.email || 'mohamedalikwass@gmail.com'}`
     },
     {
       icon: Phone,
       title: 'رقم الهاتف',
-      value: '+201551425194',
-      href: 'tel:+201551425194'
+      value: loading ? '+201551425194' : (personalInfo?.phone || '+201551425194'),
+      href: loading ? 'tel:+201551425194' : `tel:${personalInfo?.phone || '+201551425194'}`
     },
     {
       icon: MapPin,
       title: 'الموقع',
-      value: 'القاهرة، مصر',
+      value: loading ? 'القاهرة، مصر' : (personalInfo?.location || 'القاهرة، مصر'),
       href: '#'
     }
   ];

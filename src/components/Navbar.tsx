@@ -24,8 +24,9 @@ const Navbar = () => {
     { name: 'عني', href: '#about', type: 'anchor' },
     { name: 'مشاريعي', href: '/projects', type: 'link' },
     { name: 'مهاراتي', href: '#skills', type: 'anchor' },
+    { name: 'السيرة الذاتية', href: '#cv', type: 'anchor' },
     { name: 'تواصل معي', href: '#contact', type: 'anchor' },
-    { name: 'لوحة التحكم', href: '/admin', type: 'link' },
+    { name: 'لوحة التحكم', href: 'http://localhost:3001/admin', type: 'external' },
   ];
 
   return (
@@ -64,6 +65,18 @@ const Navbar = () => {
                       {item.name}
                     </motion.span>
                   </Link>
+                ) : item.type === 'external' ? (
+                  <motion.a
+                    key={item.name}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                  >
+                    {item.name}
+                  </motion.a>
                 ) : (
                   <motion.a
                     key={item.name}
@@ -110,6 +123,18 @@ const Navbar = () => {
                   {item.name}
                 </motion.span>
               </Link>
+            ) : item.type === 'external' ? (
+              <motion.a
+                key={item.name}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ x: 10 }}
+                onClick={() => setIsOpen(false)}
+                className="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
+              >
+                {item.name}
+              </motion.a>
             ) : (
               <motion.a
                 key={item.name}

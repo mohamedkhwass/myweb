@@ -18,6 +18,8 @@ export interface Project {
   images?: string[]
   featured: boolean
   display_order: number
+  show_on_company?: boolean
+  show_on_portfolio?: boolean
   created_at: string
   updated_at: string
 }
@@ -34,13 +36,22 @@ export interface PersonalInfo {
   id: number
   name: string
   title: string
-  description: string
-  email: string
-  phone: string
-  location: string
-  github_url: string
-  linkedin_url: string
-  updated_at: string
+  description?: string
+  email?: string
+  phone?: string
+  location?: string
+  github_url?: string
+  linkedin_url?: string
+  twitter_url?: string
+  website?: string
+  profile_image_url?: string
+  skills?: string[]
+  years_experience?: number
+  projects_completed?: number
+  happy_clients?: number
+  cv_url?: string
+  created_at?: string
+  updated_at?: string
 }
 
 // API functions
@@ -63,7 +74,32 @@ export const projectsAPI = {
       .select('*')
       .eq('featured', true)
       .order('display_order', { ascending: true })
-    
+
+    if (error) throw error
+    return data as Project[]
+  },
+
+  // Get projects for portfolio website only
+  async getForPortfolio() {
+    const { data, error } = await supabase
+      .from('projects')
+      .select('*')
+      .eq('show_on_portfolio', true)
+      .order('display_order', { ascending: true })
+
+    if (error) throw error
+    return data as Project[]
+  },
+
+  // Get featured projects for portfolio website only
+  async getFeaturedForPortfolio() {
+    const { data, error } = await supabase
+      .from('projects')
+      .select('*')
+      .eq('featured', true)
+      .eq('show_on_portfolio', true)
+      .order('display_order', { ascending: true })
+
     if (error) throw error
     return data as Project[]
   },
@@ -156,8 +192,11 @@ export const personalInfoAPI = {
       .from('personal_info')
       .select('*')
       .single()
-    
-    if (error) throw error
+
+    if (error) {
+      console.error('Error fetching personal info:', error)
+      return null
+    }
     return data as PersonalInfo
   },
 

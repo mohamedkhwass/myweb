@@ -18,7 +18,7 @@ const ProjectsPage = () => {
     const fetchProjects = async () => {
       try {
         setLoading(true);
-        const data = await projectsAPI.getAll();
+        const data = await projectsAPI.getForPortfolio();
         setProjects(data);
       } catch (err) {
         setError('فشل في تحميل المشاريع');
