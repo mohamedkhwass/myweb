@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Plus, Edit, Trash2, Save, X, Upload, Package, 
-  DollarSign, Star, Eye, EyeOff 
+import {
+  Plus, Edit, Trash2, Save, X, Upload, Package,
+  DollarSign, Star, Eye, EyeOff, ImageIcon
 } from 'lucide-react';
 import { productsAPI, storageAPI, Product } from '@/lib/supabase';
+import ImageGallery from '../ImageGallery';
+import ImageManager from './ImageManager';
 
 const ProductsManager = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -237,15 +239,18 @@ const ProductsManager = () => {
             transition={{ delay: index * 0.1 }}
             className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden"
           >
-            {/* Product Image */}
+            {/* Product Images */}
             {product.images && product.images.length > 0 && (
-              <div className="relative h-48">
-                <img
-                  src={product.images[0]}
+              <div className="relative">
+                <ImageGallery
+                  images={product.images}
                   alt={product.name}
-                  className="w-full h-full object-cover"
+                  autoPlay={true}
+                  autoPlayInterval={4000}
+                  showThumbnails={product.images.length > 1}
+                  className="h-48"
                 />
-                <div className="absolute top-2 right-2 flex space-x-2 rtl:space-x-reverse">
+                <div className="absolute top-2 right-2 flex space-x-2 rtl:space-x-reverse z-10">
                   {product.is_featured && (
                     <span className="bg-yellow-500 text-white px-2 py-1 rounded-full text-xs flex items-center">
                       <Star className="w-3 h-3 mr-1" />
@@ -253,8 +258,8 @@ const ProductsManager = () => {
                     </span>
                   )}
                   <span className={`px-2 py-1 rounded-full text-xs flex items-center ${
-                    product.is_active 
-                      ? 'bg-green-500 text-white' 
+                    product.is_active
+                      ? 'bg-green-500 text-white'
                       : 'bg-gray-500 text-white'
                   }`}>
                     {product.is_active ? <Eye className="w-3 h-3 mr-1" /> : <EyeOff className="w-3 h-3 mr-1" />}
@@ -506,6 +511,19 @@ const ProductsManager = () => {
                       + إضافة ميزة
                     </button>
                   </div>
+                </div>
+
+                {/* Image Management */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    صور المنتج
+                  </label>
+                  <ImageManager
+                    images={formData.images}
+                    onImagesChange={(images) => setFormData(prev => ({ ...prev, images }))}
+                    uploadPath="products"
+                    maxImages={8}
+                  />
                 </div>
 
                 {/* URLs */}

@@ -2,17 +2,20 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Plus, Edit, Trash2, Save, X, Clock, 
-  DollarSign, Star, CheckCircle 
+import {
+  Plus, Edit, Trash2, Save, X, Clock,
+  DollarSign, Star, CheckCircle, Upload, ImageIcon
 } from 'lucide-react';
-import { servicesAPI, Service } from '@/lib/supabase';
+import { servicesAPI, Service, storageAPI } from '@/lib/supabase';
+import ImageGallery from '../ImageGallery';
+import ImageManager from './ImageManager';
 
 const ServicesManager = () => {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingService, setEditingService] = useState<Service | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -22,6 +25,7 @@ const ServicesManager = () => {
     currency: 'USD',
     delivery_time: '',
     features: [] as string[],
+    images: [] as string[],
     category: '',
     is_featured: false,
     is_active: true,
@@ -50,7 +54,8 @@ const ServicesManager = () => {
     try {
       const serviceData = {
         ...formData,
-        features: formData.features.filter(feature => feature.trim() !== '')
+        features: formData.features.filter(feature => feature.trim() !== ''),
+        images: formData.images.filter(image => image.trim() !== '')
       };
 
       if (editingService) {
@@ -78,6 +83,7 @@ const ServicesManager = () => {
       currency: service.currency,
       delivery_time: service.delivery_time || '',
       features: service.features || [],
+      images: service.images || [],
       category: service.category || '',
       is_featured: service.is_featured,
       is_active: service.is_active,
@@ -100,6 +106,38 @@ const ServicesManager = () => {
     }
   };
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingImage(true);
+    try {
+      const imageUrl = await storageAPI.uploadImage(file, 'services');
+      if (imageUrl) {
+        setFormData(prev => ({
+          ...prev,
+          images: [...prev.images, imageUrl]
+        }));
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  const removeImage = async (imageUrl: string) => {
+    try {
+      await storageAPI.deleteImage(imageUrl);
+      setFormData(prev => ({
+        ...prev,
+        images: prev.images.filter(img => img !== imageUrl)
+      }));
+    } catch (error) {
+      console.error('Error removing image:', error);
+    }
+  };
+
   const resetForm = () => {
     setFormData({
       title: '',
@@ -109,6 +147,7 @@ const ServicesManager = () => {
       currency: 'USD',
       delivery_time: '',
       features: [],
+      images: [],
       category: '',
       is_featured: false,
       is_active: true,
@@ -180,12 +219,18 @@ const ServicesManager = () => {
             transition={{ delay: index * 0.1 }}
             className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden"
           >
-            <div className="p-6">
-              <div className="flex justify-between items-start mb-4">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                  {service.title}
-                </h3>
-                <div className="flex space-x-2 rtl:space-x-reverse">
+            {/* Service Images */}
+            {service.images && service.images.length > 0 && (
+              <div className="relative">
+                <ImageGallery
+                  images={service.images}
+                  alt={service.title}
+                  autoPlay={true}
+                  autoPlayInterval={4000}
+                  showThumbnails={service.images.length > 1}
+                  className="h-48"
+                />
+                <div className="absolute top-2 right-2 flex space-x-2 rtl:space-x-reverse z-10">
                   {service.is_featured && (
                     <span className="bg-yellow-500 text-white px-2 py-1 rounded-full text-xs flex items-center">
                       <Star className="w-3 h-3 mr-1" />
@@ -193,14 +238,41 @@ const ServicesManager = () => {
                     </span>
                   )}
                   <span className={`px-2 py-1 rounded-full text-xs flex items-center ${
-                    service.is_active 
-                      ? 'bg-green-500 text-white' 
+                    service.is_active
+                      ? 'bg-green-500 text-white'
                       : 'bg-gray-500 text-white'
                   }`}>
                     <CheckCircle className="w-3 h-3 mr-1" />
                     {service.is_active ? 'نشط' : 'غير نشط'}
                   </span>
                 </div>
+              </div>
+            )}
+
+            <div className="p-6">
+              <div className="flex justify-between items-start mb-4">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                  {service.title}
+                </h3>
+                {/* Show badges only if no images */}
+                {(!service.images || service.images.length === 0) && (
+                  <div className="flex space-x-2 rtl:space-x-reverse">
+                    {service.is_featured && (
+                      <span className="bg-yellow-500 text-white px-2 py-1 rounded-full text-xs flex items-center">
+                        <Star className="w-3 h-3 mr-1" />
+                        مميز
+                      </span>
+                    )}
+                    <span className={`px-2 py-1 rounded-full text-xs flex items-center ${
+                      service.is_active
+                        ? 'bg-green-500 text-white'
+                        : 'bg-gray-500 text-white'
+                    }`}>
+                      <CheckCircle className="w-3 h-3 mr-1" />
+                      {service.is_active ? 'نشط' : 'غير نشط'}
+                    </span>
+                  </div>
+                )}
               </div>
 
               <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3">
@@ -426,6 +498,19 @@ const ServicesManager = () => {
                       + إضافة ميزة
                     </button>
                   </div>
+                </div>
+
+                {/* Image Management */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    صور الخدمة
+                  </label>
+                  <ImageManager
+                    images={formData.images}
+                    onImagesChange={(images) => setFormData(prev => ({ ...prev, images }))}
+                    uploadPath="services"
+                    maxImages={6}
+                  />
                 </div>
 
                 {/* Settings */}

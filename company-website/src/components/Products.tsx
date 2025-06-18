@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Star, Download, ExternalLink, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { productsAPI, Product } from '@/lib/supabase';
+import ImageGallery from './ImageGallery';
 
 const Products = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -124,16 +125,19 @@ const Products = () => {
                 viewport={{ once: true }}
                 className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group"
               >
-                {product.image_url ? (
-                  <div className="h-48 overflow-hidden">
-                    <img
-                      src={product.image_url}
+                {(product.images && product.images.length > 0) || product.image_url ? (
+                  <div className="overflow-hidden rounded-t-xl">
+                    <ImageGallery
+                      images={product.images && product.images.length > 0 ? product.images : product.image_url ? [product.image_url] : []}
                       alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      autoPlay={true}
+                      autoPlayInterval={5000}
+                      showThumbnails={false}
+                      className="h-48"
                     />
                   </div>
                 ) : (
-                  <div className="h-48 bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900 dark:to-primary-800 flex items-center justify-center">
+                  <div className="h-48 bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900 dark:to-primary-800 flex items-center justify-center rounded-t-xl">
                     <div className="text-primary-600 dark:text-primary-400 text-6xl font-bold">
                       {product.name.charAt(0)}
                     </div>

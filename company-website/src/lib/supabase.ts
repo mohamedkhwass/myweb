@@ -103,6 +103,7 @@ export interface Service {
   price_starting_from?: number
   currency: string
   features?: string[]
+  images?: string[]
   delivery_time?: string
   category?: string
   is_featured: boolean
@@ -119,12 +120,12 @@ export const companyAPI = {
       .from('company_info')
       .select('*')
       .single()
-    
+
     if (error) {
       console.error('Error fetching company info:', error)
       return null
     }
-    
+
     return data
   },
 
@@ -135,12 +136,12 @@ export const companyAPI = {
       .eq('id', 1)
       .select()
       .single()
-    
+
     if (error) {
       console.error('Error updating company info:', error)
       return null
     }
-    
+
     return data
   }
 }
@@ -231,12 +232,12 @@ export const productsAPI = {
       .select('*')
       .eq('is_active', true)
       .order('display_order', { ascending: true })
-    
+
     if (error) {
       console.error('Error fetching products:', error)
       return []
     }
-    
+
     return data || []
   },
 
@@ -247,12 +248,12 @@ export const productsAPI = {
       .eq('is_active', true)
       .eq('is_featured', true)
       .order('display_order', { ascending: true })
-    
+
     if (error) {
       console.error('Error fetching featured products:', error)
       return []
     }
-    
+
     return data || []
   },
 
@@ -263,12 +264,12 @@ export const productsAPI = {
       .eq('id', id)
       .eq('is_active', true)
       .single()
-    
+
     if (error) {
       console.error('Error fetching product:', error)
       return null
     }
-    
+
     return data
   },
 
@@ -278,12 +279,12 @@ export const productsAPI = {
       .insert(product)
       .select()
       .single()
-    
+
     if (error) {
       console.error('Error creating product:', error)
       return null
     }
-    
+
     return data
   },
 
@@ -294,12 +295,12 @@ export const productsAPI = {
       .eq('id', id)
       .select()
       .single()
-    
+
     if (error) {
       console.error('Error updating product:', error)
       return null
     }
-    
+
     return data
   },
 
@@ -308,12 +309,12 @@ export const productsAPI = {
       .from('products')
       .delete()
       .eq('id', id)
-    
+
     if (error) {
       console.error('Error deleting product:', error)
       return false
     }
-    
+
     return true
   }
 }
@@ -325,12 +326,12 @@ export const servicesAPI = {
       .select('*')
       .eq('is_active', true)
       .order('display_order', { ascending: true })
-    
+
     if (error) {
       console.error('Error fetching services:', error)
       return []
     }
-    
+
     return data || []
   },
 
@@ -341,12 +342,12 @@ export const servicesAPI = {
       .eq('is_active', true)
       .eq('is_featured', true)
       .order('display_order', { ascending: true })
-    
+
     if (error) {
       console.error('Error fetching featured services:', error)
       return []
     }
-    
+
     return data || []
   },
 
@@ -356,12 +357,12 @@ export const servicesAPI = {
       .insert(service)
       .select()
       .single()
-    
+
     if (error) {
       console.error('Error creating service:', error)
       return null
     }
-    
+
     return data
   },
 
@@ -372,12 +373,12 @@ export const servicesAPI = {
       .eq('id', id)
       .select()
       .single()
-    
+
     if (error) {
       console.error('Error updating service:', error)
       return null
     }
-    
+
     return data
   },
 
@@ -386,12 +387,12 @@ export const servicesAPI = {
       .from('services')
       .delete()
       .eq('id', id)
-    
+
     if (error) {
       console.error('Error deleting service:', error)
       return false
     }
-    
+
     return true
   }
 }
@@ -451,12 +452,12 @@ export const projectsAPI = {
       .from('projects')
       .select('*')
       .order('display_order', { ascending: true })
-    
+
     if (error) {
       console.error('Error fetching projects:', error)
       return []
     }
-    
+
     return data || []
   },
 

@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Building2, User, FolderOpen, Settings, Package, 
-  BarChart3, LogOut, Globe, Smartphone 
+import {
+  Building2, User, FolderOpen, Settings, Package,
+  BarChart3, LogOut, Globe, Smartphone
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { supabase, companyAPI, CompanyInfo } from '@/lib/supabase';
@@ -61,7 +61,7 @@ const AdminPage = () => {
         <div className="flex">
           {/* Sidebar */}
           <div className="w-64 bg-white dark:bg-gray-800 shadow-lg min-h-screen">
-            <div className="p-6">
+            <div className="p-6 flex flex-col h-screen">
               {/* Logo */}
               <div className="flex items-center space-x-3 rtl:space-x-reverse mb-8">
                 <div className="p-2 bg-primary-600 text-white rounded-lg">
@@ -78,54 +78,58 @@ const AdminPage = () => {
               </div>
 
               {/* Navigation */}
-              <nav className="space-y-2">
-                {sidebarItems.map((item) => (
-                  <motion.button
-                    key={item.id}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => setActiveTab(item.id)}
-                    className={`w-full flex items-center space-x-3 rtl:space-x-reverse px-4 py-3 rounded-lg transition-colors ${
-                      activeTab === item.id
-                        ? 'bg-primary-600 text-white'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                    }`}
-                  >
-                    <item.icon size={20} />
-                    <span className="text-sm font-medium">{item.label}</span>
-                  </motion.button>
-                ))}
-              </nav>
+              <div className="flex-1">
+                <nav className="space-y-2">
+                  {sidebarItems.map((item) => (
+                    <motion.button
+                      key={item.id}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setActiveTab(item.id)}
+                      className={`w-full flex items-center space-x-3 rtl:space-x-reverse px-4 py-3 rounded-lg transition-colors ${
+                        activeTab === item.id
+                          ? 'bg-primary-600 text-white'
+                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                      }`}
+                    >
+                      <item.icon size={20} />
+                      <span className="text-sm font-medium">{item.label}</span>
+                    </motion.button>
+                  ))}
+                </nav>
 
-              {/* Website Links */}
-              <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">
-                  المواقع
-                </h3>
-                <div className="space-y-2">
-                  <a
-                    href="http://localhost:3001"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center space-x-2 rtl:space-x-reverse text-sm text-gray-600 dark:text-gray-400 hover:text-primary-600 transition-colors"
-                  >
-                    <Building2 size={16} />
-                    <span>موقع الشركة</span>
-                  </a>
-                  <a
-                    href="http://localhost:3003"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center space-x-2 rtl:space-x-reverse text-sm text-gray-600 dark:text-gray-400 hover:text-primary-600 transition-colors"
-                  >
-                    <User size={16} />
-                    <span>البورتفوليو الشخصي</span>
-                  </a>
+                {/* Website Links */}
+                <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">
+                    المواقع
+                  </h3>
+                  <div className="space-y-2">
+                    <a
+                      href="http://localhost:3001"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center space-x-2 rtl:space-x-reverse text-sm text-gray-600 dark:text-gray-400 hover:text-primary-600 transition-colors"
+                    >
+                      <Building2 size={16} />
+                      <span>موقع الشركة</span>
+                    </a>
+                    <a
+                      href="http://localhost:3003"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center space-x-2 rtl:space-x-reverse text-sm text-gray-600 dark:text-gray-400 hover:text-primary-600 transition-colors"
+                    >
+                      <User size={16} />
+                      <span>البورتفوليو الشخصي</span>
+                    </a>
+                  </div>
                 </div>
               </div>
 
+
+
               {/* Logout Button */}
-              <div className="absolute bottom-6 left-6 right-6">
+              <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}

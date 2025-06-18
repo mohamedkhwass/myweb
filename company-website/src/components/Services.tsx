@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Smartphone, Globe, Database, Cloud, Monitor, Users, ArrowLeft, CheckCircle } from 'lucide-react';
 import { servicesAPI, Service, companyAPI, CompanyInfo } from '@/lib/supabase';
+import ImageGallery from './ImageGallery';
 
 const Services = () => {
   const [services, setServices] = useState<Service[]>([]);
@@ -175,7 +176,7 @@ const Services = () => {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {services.slice(0, 4).map((service, index) => {
             const IconComponent = getIcon(service.icon_name || 'Smartphone');
-            
+
             return (
               <motion.div
                 key={service.id}
@@ -201,10 +202,24 @@ const Services = () => {
                   <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
                     {service.title}
                   </h3>
-                  
+
                   <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
                     {service.short_description}
                   </p>
+
+                  {/* Service Images */}
+                  {service.images && service.images.length > 0 && (
+                    <div className="mb-6 overflow-hidden rounded-lg">
+                      <ImageGallery
+                        images={service.images}
+                        alt={service.title}
+                        autoPlay={true}
+                        autoPlayInterval={4000}
+                        showThumbnails={false}
+                        className="h-32"
+                      />
+                    </div>
+                  )}
 
                   {/* Features */}
                   {service.features && service.features.length > 0 && (

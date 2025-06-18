@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton';
+import ImageGallery from '@/components/ImageGallery';
 import { productsAPI, Product } from '@/lib/supabase';
 
 const ProductsPage = () => {
@@ -31,7 +32,7 @@ const ProductsPage = () => {
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Navbar />
-      
+
       {/* Hero Section */}
       <section className="pt-24 pb-16 bg-gradient-to-br from-primary-50 via-white to-secondary-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <div className="container">
@@ -90,12 +91,25 @@ const ProductsPage = () => {
                   viewport={{ once: true }}
                   className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
                 >
-                  <div className="h-48 bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900 dark:to-primary-800 flex items-center justify-center">
-                    <div className="text-primary-600 dark:text-primary-400 text-6xl font-bold">
-                      {product.name.charAt(0)}
+                  {(product.images && product.images.length > 0) ? (
+                    <div className="overflow-hidden rounded-t-xl">
+                      <ImageGallery
+                        images={product.images}
+                        alt={product.name}
+                        autoPlay={true}
+                        autoPlayInterval={5000}
+                        showThumbnails={product.images.length > 1}
+                        className="h-48"
+                      />
                     </div>
-                  </div>
-                  
+                  ) : (
+                    <div className="h-48 bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900 dark:to-primary-800 flex items-center justify-center rounded-t-xl">
+                      <div className="text-primary-600 dark:text-primary-400 text-6xl font-bold">
+                        {product.name.charAt(0)}
+                      </div>
+                    </div>
+                  )}
+
                   <div className="p-6">
                     <div className="flex items-start justify-between mb-3">
                       <h3 className="text-xl font-bold text-gray-900 dark:text-white">
@@ -110,7 +124,7 @@ const ProductsPage = () => {
                         </div>
                       )}
                     </div>
-                    
+
                     <p className="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
                       {product.short_description || product.description}
                     </p>

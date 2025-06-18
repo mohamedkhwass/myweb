@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ExternalLink, Github } from 'lucide-react';
 import { projectsAPI, Project } from '@/lib/supabase';
+import ImageGallery from './ImageGallery';
 
-const Portfolio = () => {
+const Portfolio: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -69,38 +70,48 @@ const Portfolio = () => {
                 whileHover={{ y: -5 }}
                 className="card group"
               >
-                {/* Project Image */}
-                {project.image_url && (
+                {/* Project Images Gallery */}
+                {(project.images && project.images.length > 0) || project.image_url ? (
                   <div className="relative overflow-hidden rounded-t-xl">
-                    <img
-                      src={project.image_url}
+                    <ImageGallery
+                      images={project.images && project.images.length > 0 ? project.images : project.image_url ? [project.image_url] : []}
                       alt={project.title}
-                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                      autoPlay={true}
+                      autoPlayInterval={5000}
+                      showThumbnails={false}
+                      className="h-48"
                     />
-                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-4 rtl:space-x-reverse">
-                      {project.live_url && (
-                        <a
-                          href={project.live_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-2 bg-white rounded-full text-gray-900 hover:bg-gray-100 transition-colors"
-                        >
-                          <ExternalLink size={20} />
-                        </a>
-                      )}
-                      {project.github_url && (
-                        <a
-                          href={project.github_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-2 bg-white rounded-full text-gray-900 hover:bg-gray-100 transition-colors"
-                        >
-                          <Github size={20} />
-                        </a>
-                      )}
-                    </div>
+                    {/* روابط المشروع - تظهر في الوسط فقط */}
+                    {(project.live_url || project.github_url) && (
+                      <div className="absolute inset-0 bg-black/0 hover:bg-black/20 transition-colors duration-300 flex items-center justify-center space-x-4 rtl:space-x-reverse opacity-0 group-hover:opacity-100 z-10 pointer-events-none">
+                        <div className="flex space-x-4 rtl:space-x-reverse pointer-events-auto">
+                          {project.live_url && (
+                            <a
+                              href={project.live_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="p-2 bg-white rounded-full text-gray-900 hover:bg-gray-100 transition-colors shadow-lg"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <ExternalLink size={20} />
+                            </a>
+                          )}
+                          {project.github_url && (
+                            <a
+                              href={project.github_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="p-2 bg-white rounded-full text-gray-900 hover:bg-gray-100 transition-colors shadow-lg"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <Github size={20} />
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
+                ) : null}
 
                 <div className="card-body">
                   <div className="flex items-start justify-between mb-3">

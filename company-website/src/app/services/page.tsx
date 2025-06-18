@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton';
+import ImageGallery from '@/components/ImageGallery';
 import { servicesAPI, Service, companyAPI, CompanyInfo } from '@/lib/supabase';
 
 const ServicesPage = () => {
@@ -90,7 +91,7 @@ const ServicesPage = () => {
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Navbar />
-      
+
       {/* Hero Section */}
       <section className="pt-24 pb-16 bg-gradient-to-br from-primary-50 via-white to-secondary-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <div className="container">
@@ -149,21 +150,25 @@ const ServicesPage = () => {
                   viewport={{ once: true }}
                   className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
                 >
-                  {service.image_url && (
-                    <div className="h-48 overflow-hidden">
-                      <img
-                        src={service.image_url}
-                        alt={service.name}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  {/* Service Images */}
+                  {(service.images && service.images.length > 0) || service.image_url ? (
+                    <div className="overflow-hidden rounded-t-xl">
+                      <ImageGallery
+                        images={service.images && service.images.length > 0 ? service.images : service.image_url ? [service.image_url] : []}
+                        alt={service.title || service.name}
+                        autoPlay={true}
+                        autoPlayInterval={4000}
+                        showThumbnails={service.images && service.images.length > 1}
+                        className="h-48"
                       />
                     </div>
-                  )}
-                  
+                  ) : null}
+
                   <div className="p-6">
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
                       {service.name}
                     </h3>
-                    
+
                     <p className="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
                       {service.description}
                     </p>

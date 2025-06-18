@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Plus, Edit, Trash2, Save, X, Upload, Star, 
-  ExternalLink, Github, Image as ImageIcon 
+import {
+  Plus, Edit, Trash2, Save, X, Upload, Star,
+  ExternalLink, Github, Image as ImageIcon
 } from 'lucide-react';
 import { projectsAPI, storageAPI, Project } from '@/lib/supabase';
+import ImageGallery from '../ImageGallery';
+import ImageManager from './ImageManager';
 
 const ProjectsManager = () => {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -218,16 +220,19 @@ const ProjectsManager = () => {
             transition={{ delay: index * 0.1 }}
             className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden"
           >
-            {/* Project Image */}
-            {project.image_url && (
-              <div className="relative h-48">
-                <img
-                  src={project.image_url}
+            {/* Project Images */}
+            {((project.images && project.images.length > 0) || project.image_url) && (
+              <div className="relative">
+                <ImageGallery
+                  images={project.images && project.images.length > 0 ? project.images : project.image_url ? [project.image_url] : []}
                   alt={project.title}
-                  className="w-full h-full object-cover"
+                  autoPlay={true}
+                  autoPlayInterval={4000}
+                  showThumbnails={project.images && project.images.length > 1}
+                  className="h-48"
                 />
                 {project.featured && (
-                  <div className="absolute top-2 right-2">
+                  <div className="absolute top-2 right-2 z-10">
                     <span className="bg-yellow-500 text-white px-2 py-1 rounded-full text-xs flex items-center">
                       <Star className="w-3 h-3 mr-1" />
                       مميز
@@ -455,57 +460,17 @@ const ProjectsManager = () => {
                   </div>
                 </div>
 
-                {/* Image Upload */}
+                {/* Image Management */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     صور المشروع
                   </label>
-                  <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6">
-                    <div className="text-center">
-                      <ImageIcon className="mx-auto h-12 w-12 text-gray-400" />
-                      <div className="mt-4">
-                        <label className="cursor-pointer">
-                          <span className="mt-2 block text-sm font-medium text-gray-900 dark:text-white">
-                            اختر صورة أو اسحبها هنا
-                          </span>
-                          <input
-                            type="file"
-                            className="hidden"
-                            accept="image/*"
-                            onChange={handleImageUpload}
-                            disabled={uploadingImage}
-                          />
-                        </label>
-                      </div>
-                      {uploadingImage && (
-                        <div className="mt-2">
-                          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-600 mx-auto"></div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Image Preview */}
-                  {formData.images.length > 0 && (
-                    <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
-                      {formData.images.map((imageUrl, index) => (
-                        <div key={index} className="relative">
-                          <img
-                            src={imageUrl}
-                            alt={`صورة ${index + 1}`}
-                            className="w-full h-24 object-cover rounded-lg"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => removeImage(imageUrl)}
-                            className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700 transition-colors"
-                          >
-                            <X className="w-3 h-3" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  <ImageManager
+                    images={formData.images}
+                    onImagesChange={(images) => setFormData(prev => ({ ...prev, images }))}
+                    uploadPath="projects"
+                    maxImages={10}
+                  />
                 </div>
 
                 {/* Settings */}
