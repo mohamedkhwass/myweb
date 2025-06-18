@@ -139,10 +139,50 @@ company-website
 
 ### Environment Variables:
 ```
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+NEXT_PUBLIC_SUPABASE_URL=https://yoveamzpdqepjgafqgjl.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlvdmVhbXpwZHFlcGpnYWZxZ2psIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ1MzI4NzEsImV4cCI6MjA1MDEwODg3MX0.your-anon-key-here
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
 ```
+
+### ⚠️ حل مشكلة "references Secret which does not exist":
+
+إذا ظهر خطأ: `Environment Variable "NEXT_PUBLIC_SUPABASE_URL" references Secret "supabase_url", which does not exist`
+
+**السبب**: Vercel يحاول الوصول إلى Secret غير موجود بدلاً من القيمة المباشرة.
+
+**الحل الفوري**:
+
+1. **احذف جميع Environment Variables**:
+   - اذهب إلى Settings > Environment Variables
+   - احذف كل متغير موجود (NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY)
+
+2. **احذف أي Secrets موجودة**:
+   - في نفس الصفحة، ابحث عن قسم "Secrets"
+   - احذف أي secrets مثل "supabase_url" أو "supabase_key"
+
+3. **أضف المتغيرات من جديد بالقيم المباشرة**:
+   ```
+   Name: NEXT_PUBLIC_SUPABASE_URL
+   Value: https://yoveamzpdqepjgafqgjl.supabase.co
+   Environment: Production, Preview, Development
+
+   Name: NEXT_PUBLIC_SUPABASE_ANON_KEY
+   Value: [انسخ anon key من Supabase Dashboard]
+   Environment: Production, Preview, Development
+
+   Name: SUPABASE_SERVICE_ROLE_KEY
+   Value: [انسخ service role key من Supabase Dashboard]
+   Environment: Production, Preview, Development
+   ```
+
+4. **تأكد من عدم استخدام @ في القيم**:
+   - ❌ خطأ: `@supabase_url` أو `$supabase_url`
+   - ✅ صحيح: `https://yoveamzpdqepjgafqgjl.supabase.co`
+
+5. **احفظ وأعد النشر**:
+   - انقر Save
+   - اذهب إلى Deployments
+   - انقر Redeploy
 
 ## 📞 إذا استمرت المشكلة
 
