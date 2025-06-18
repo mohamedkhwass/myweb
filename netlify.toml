@@ -1,0 +1,15 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[context.production.environment]
+  NEXT_PUBLIC_SUPABASE_URL = "your_supabase_url_here"
+  NEXT_PUBLIC_SUPABASE_ANON_KEY = "your_supabase_anon_key_here"
