@@ -101,12 +101,12 @@ const Products = () => {
         </motion.div>
 
         {loading ? (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="bg-gray-100 dark:bg-gray-800 rounded-xl p-6 shadow-lg animate-pulse">
-                <div className="h-48 bg-gray-200 dark:bg-gray-700 rounded-lg mb-4"></div>
-                <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
-                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
+              <div key={i} className="bg-gray-100 dark:bg-gray-800 rounded-xl p-4 sm:p-6 shadow-lg animate-pulse">
+                <div className="h-32 sm:h-40 md:h-48 bg-gray-200 dark:bg-gray-700 rounded-lg mb-3 sm:mb-4"></div>
+                <div className="h-5 sm:h-6 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+                <div className="h-3 sm:h-4 bg-gray-200 dark:bg-gray-700 rounded mb-3 sm:mb-4"></div>
                 <div className="space-y-2">
                   <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded"></div>
                   <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded"></div>
@@ -115,7 +115,7 @@ const Products = () => {
             ))}
           </div>
         ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {displayProducts.map((product, index) => (
               <motion.div
                 key={product.id}
@@ -133,38 +133,38 @@ const Products = () => {
                       autoPlay={true}
                       autoPlayInterval={5000}
                       showThumbnails={false}
-                      className="h-48"
+                      className="h-32 sm:h-40 md:h-48"
                     />
                   </div>
                 ) : (
-                  <div className="h-48 bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900 dark:to-primary-800 flex items-center justify-center rounded-t-xl">
-                    <div className="text-primary-600 dark:text-primary-400 text-6xl font-bold">
+                  <div className="h-32 sm:h-40 md:h-48 bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900 dark:to-primary-800 flex items-center justify-center rounded-t-xl">
+                    <div className="text-primary-600 dark:text-primary-400 text-3xl sm:text-4xl md:text-6xl font-bold">
                       {product.name.charAt(0)}
                     </div>
                   </div>
                 )}
 
-                <div className="p-6">
-                  <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                <div className="p-4 sm:p-6">
+                  <div className="flex items-start justify-between mb-2 sm:mb-3">
+                    <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
                       {product.name}
                     </h3>
                     {product.rating && (
                       <div className="flex items-center">
-                        <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                        <span className="text-sm text-gray-600 dark:text-gray-400 ml-1">
+                        <Star className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-400 fill-current" />
+                        <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 ml-1">
                           {product.rating}
                         </span>
                       </div>
                     )}
                   </div>
 
-                  <p className="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
+                  <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-3 sm:mb-4 leading-relaxed">
                     {product.description}
                   </p>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-lg font-bold text-primary-600">
+                    <span className="text-base sm:text-lg font-bold text-primary-600">
                       {product.price ? `$${product.price}` : 'مجاني'}
                     </span>
                     <div className="flex space-x-2 rtl:space-x-reverse">
@@ -173,9 +173,9 @@ const Products = () => {
                           <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="btn-outline text-sm flex items-center space-x-1 rtl:space-x-reverse"
+                            className="btn-outline text-xs sm:text-sm flex items-center space-x-1 rtl:space-x-reverse py-1 px-2 sm:py-2 sm:px-3"
                           >
-                            <ExternalLink className="w-4 h-4" />
+                            <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
                             <span>معاينة</span>
                           </motion.button>
                         </Link>

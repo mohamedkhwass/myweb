@@ -1,0 +1,345 @@
+/* تحسينات التصميم المتجاوب للهواتف المحمولة */
+
+/* تحسينات عامة للهواتف */
+@media (max-width: 640px) {
+  /* تقليل المسافات العامة */
+  .section {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+  
+  /* تحسين النصوص */
+  h1 {
+    font-size: 1.5rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  h2 {
+    font-size: 1.25rem !important;
+    line-height: 1.4 !important;
+  }
+  
+  h3 {
+    font-size: 1.125rem !important;
+    line-height: 1.4 !important;
+  }
+  
+  /* تحسين الأزرار */
+  .btn-primary,
+  .btn-secondary,
+  .btn-outline {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.875rem !important;
+  }
+  
+  /* تحسين الكروت */
+  .card {
+    margin-bottom: 1rem !important;
+  }
+  
+  .card-body {
+    padding: 1rem !important;
+  }
+  
+  /* تحسين الشبكة */
+  .grid {
+    gap: 1rem !important;
+  }
+  
+  /* تحسين الحاوي */
+  .container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
+
+/* تحسينات للأجهزة اللوحية الصغيرة */
+@media (min-width: 641px) and (max-width: 768px) {
+  .section {
+    padding-top: 3rem !important;
+    padding-bottom: 3rem !important;
+  }
+  
+  h1 {
+    font-size: 2rem !important;
+  }
+  
+  h2 {
+    font-size: 1.5rem !important;
+  }
+  
+  .btn-primary,
+  .btn-secondary,
+  .btn-outline {
+    padding: 0.625rem 1.25rem !important;
+    font-size: 0.9375rem !important;
+  }
+}
+
+/* تحسينات للأجهزة اللوحية */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .section {
+    padding-top: 4rem !important;
+    padding-bottom: 4rem !important;
+  }
+}
+
+/* تحسينات خاصة بمكونات معينة */
+
+/* Hero Section */
+@media (max-width: 640px) {
+  #home {
+    min-height: 100vh !important;
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+  
+  #home .container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  #home h1 {
+    font-size: 1.5rem !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  #home p {
+    font-size: 0.875rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+}
+
+/* Services Section */
+@media (max-width: 640px) {
+  #services .grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  
+  #services .card {
+    margin-bottom: 1rem !important;
+  }
+  
+  #services .card-body {
+    padding: 1rem !important;
+  }
+  
+  #services h3 {
+    font-size: 1rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  #services p {
+    font-size: 0.875rem !important;
+    margin-bottom: 1rem !important;
+  }
+}
+
+/* Portfolio Section */
+@media (max-width: 640px) {
+  #portfolio .grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+}
+
+/* Products Section */
+@media (max-width: 640px) {
+  #products .grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+}
+
+/* Contact Section */
+@media (max-width: 640px) {
+  #contact .grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+  
+  #contact input,
+  #contact textarea {
+    font-size: 1rem !important;
+    padding: 0.75rem !important;
+  }
+}
+
+/* Navigation */
+@media (max-width: 1024px) {
+  nav .container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  nav h1 {
+    font-size: 1.125rem !important;
+  }
+  
+  nav p {
+    font-size: 0.75rem !important;
+  }
+}
+
+/* Footer */
+@media (max-width: 640px) {
+  footer .grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+    text-align: center !important;
+  }
+  
+  footer h3 {
+    font-size: 1.125rem !important;
+  }
+  
+  footer p,
+  footer a {
+    font-size: 0.875rem !important;
+  }
+}
+
+/* Image Gallery */
+@media (max-width: 640px) {
+  .image-gallery {
+    height: 200px !important;
+  }
+  
+  .image-gallery img {
+    object-fit: cover !important;
+  }
+  
+  .image-gallery .controls {
+    bottom: 0.5rem !important;
+  }
+  
+  .image-gallery .control-btn {
+    width: 2rem !important;
+    height: 2rem !important;
+    font-size: 0.75rem !important;
+  }
+  
+  .image-gallery .thumbnails {
+    gap: 0.25rem !important;
+  }
+  
+  .image-gallery .thumbnail {
+    width: 3rem !important;
+    height: 3rem !important;
+  }
+}
+
+/* WhatsApp Button */
+@media (max-width: 640px) {
+  .whatsapp-btn {
+    width: 3rem !important;
+    height: 3rem !important;
+    bottom: 1rem !important;
+    right: 1rem !important;
+  }
+  
+  .whatsapp-btn svg {
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+  }
+}
+
+/* Modal/Popup */
+@media (max-width: 640px) {
+  .modal {
+    margin: 1rem !important;
+    max-width: calc(100vw - 2rem) !important;
+  }
+  
+  .modal-header {
+    padding: 1rem !important;
+  }
+  
+  .modal-body {
+    padding: 1rem !important;
+  }
+  
+  .modal-footer {
+    padding: 1rem !important;
+  }
+}
+
+/* Loading Spinner */
+@media (max-width: 640px) {
+  .spinner {
+    width: 2rem !important;
+    height: 2rem !important;
+  }
+}
+
+/* Stats/Counters */
+@media (max-width: 640px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem !important;
+  }
+  
+  .stat-item {
+    text-align: center !important;
+    padding: 1rem !important;
+  }
+  
+  .stat-number {
+    font-size: 1.5rem !important;
+  }
+  
+  .stat-label {
+    font-size: 0.75rem !important;
+  }
+}
+
+/* Animations - تقليل الحركة على الهواتف لتوفير البطارية */
+@media (max-width: 640px) {
+  @media (prefers-reduced-motion: no-preference) {
+    * {
+      animation-duration: 0.3s !important;
+      transition-duration: 0.2s !important;
+    }
+  }
+}
+
+/* تحسين الخطوط للهواتف */
+@media (max-width: 640px) {
+  body {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+  
+  .arabic-text {
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+  }
+}
+
+/* تحسين التباعد للهواتف */
+@media (max-width: 640px) {
+  .space-y-1 > * + * {
+    margin-top: 0.25rem !important;
+  }
+  
+  .space-y-2 > * + * {
+    margin-top: 0.5rem !important;
+  }
+  
+  .space-y-3 > * + * {
+    margin-top: 0.75rem !important;
+  }
+  
+  .space-y-4 > * + * {
+    margin-top: 1rem !important;
+  }
+  
+  .space-y-6 > * + * {
+    margin-top: 1.5rem !important;
+  }
+  
+  .space-y-8 > * + * {
+    margin-top: 2rem !important;
+  }
+}

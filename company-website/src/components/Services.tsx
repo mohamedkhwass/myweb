@@ -173,7 +173,7 @@ const Services = () => {
         </motion.div>
 
         {/* Services Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
           {services.slice(0, 4).map((service, index) => {
             const IconComponent = getIcon(service.icon_name || 'Smartphone');
 
@@ -189,66 +189,66 @@ const Services = () => {
               >
                 <div className="card-body">
                   {/* Icon & Badge */}
-                  <div className="flex items-start justify-between mb-6">
-                    <div className="w-16 h-16 bg-primary-100 dark:bg-primary-900 rounded-xl flex items-center justify-center group-hover:bg-primary-600 transition-colors duration-300">
-                      <IconComponent className="w-8 h-8 text-primary-600 group-hover:text-white transition-colors duration-300" />
+                  <div className="flex items-start justify-between mb-4 sm:mb-6">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-primary-100 dark:bg-primary-900 rounded-lg sm:rounded-xl flex items-center justify-center group-hover:bg-primary-600 transition-colors duration-300">
+                      <IconComponent className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-primary-600 group-hover:text-white transition-colors duration-300" />
                     </div>
                     {service.is_featured && (
-                      <span className="badge badge-primary">مميز</span>
+                      <span className="badge badge-primary text-xs">مميز</span>
                     )}
                   </div>
 
                   {/* Content */}
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-3">
                     {service.title}
                   </h3>
 
-                  <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+                  <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-4 sm:mb-6 leading-relaxed">
                     {service.short_description}
                   </p>
 
                   {/* Service Images */}
                   {service.images && service.images.length > 0 && (
-                    <div className="mb-6 overflow-hidden rounded-lg">
+                    <div className="mb-4 sm:mb-6 overflow-hidden rounded-lg">
                       <ImageGallery
                         images={service.images}
                         alt={service.title}
                         autoPlay={true}
                         autoPlayInterval={4000}
                         showThumbnails={false}
-                        className="h-32"
+                        className="h-24 sm:h-28 md:h-32"
                       />
                     </div>
                   )}
 
                   {/* Features */}
                   {service.features && service.features.length > 0 && (
-                    <div className="feature-list mb-6">
-                      {service.features.slice(0, 3).map((feature, featureIndex) => (
+                    <div className="feature-list mb-4 sm:mb-6">
+                      {service.features.slice(0, 2).map((feature, featureIndex) => (
                         <div key={featureIndex} className="feature-item">
-                          <CheckCircle className="w-4 h-4 feature-icon" />
-                          <span className="text-sm">{feature}</span>
+                          <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 feature-icon" />
+                          <span className="text-xs sm:text-sm">{feature}</span>
                         </div>
                       ))}
-                      {service.features.length > 3 && (
-                        <div className="text-sm text-gray-500 mt-2">
-                          +{service.features.length - 3} ميزة أخرى
+                      {service.features.length > 2 && (
+                        <div className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">
+                          +{service.features.length - 2} ميزة أخرى
                         </div>
                       )}
                     </div>
                   )}
 
                   {/* Price & Delivery */}
-                  <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center justify-between mb-4 sm:mb-6">
                     <div>
-                      <div className="price-tag">
+                      <div className="text-lg sm:text-xl lg:text-2xl font-bold text-primary-600 dark:text-primary-400">
                         ${service.price_starting_from}+
                       </div>
-                      <div className="text-sm text-gray-500">يبدأ من</div>
+                      <div className="text-xs sm:text-sm text-gray-500">يبدأ من</div>
                     </div>
                     {service.delivery_time && (
                       <div className="text-right">
-                        <div className="text-sm font-medium text-gray-900 dark:text-white">
+                        <div className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">
                           {service.delivery_time}
                         </div>
                         <div className="text-xs text-gray-500">مدة التسليم</div>
@@ -261,10 +261,10 @@ const Services = () => {
                     onClick={() => handleServiceRequest(service.title)}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full btn-primary flex items-center justify-center space-x-2 rtl:space-x-reverse"
+                    className="w-full btn-primary flex items-center justify-center space-x-2 rtl:space-x-reverse text-sm sm:text-base py-2 sm:py-3"
                   >
                     <span>اطلب الخدمة</span>
-                    <ArrowLeft className="w-4 h-4" />
+                    <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4" />
                   </motion.button>
                 </div>
               </motion.div>
@@ -278,19 +278,19 @@ const Services = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           viewport={{ once: true }}
-          className="text-center mt-16"
+          className="text-center mt-12 sm:mt-16 px-4 sm:px-0"
         >
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+          <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">
             لديك مشروع مخصص؟
           </h3>
-          <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-6 sm:mb-8 max-w-2xl mx-auto">
             نحن نقدم حلول مخصصة تماماً لاحتياجاتك. تواصل معنا للحصول على استشارة مجانية وعرض سعر مخصص لمشروعك.
           </p>
           <motion.a
             href="#contact"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="btn-outline"
+            className="btn-outline text-sm sm:text-base py-2 sm:py-3 px-4 sm:px-6"
           >
             احصل على استشارة مجانية
           </motion.a>
