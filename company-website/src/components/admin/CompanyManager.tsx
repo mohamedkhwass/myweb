@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Save, Upload, Building2, Mail, Phone, MapPin, Globe, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
+import { Save, Upload, Building2, Mail, Phone, MapPin, Globe, Facebook, Youtube, Linkedin, Instagram } from 'lucide-react';
 import { companyAPI, storageAPI, CompanyInfo } from '@/lib/supabase';
 
 const CompanyManager = () => {
@@ -22,6 +22,7 @@ const CompanyManager = () => {
     company_website: '',
     company_linkedin: '',
     company_twitter: '',
+    company_youtube: '',
     company_facebook: '',
     company_instagram: '',
     founded_year: new Date().getFullYear(),
@@ -52,6 +53,7 @@ const CompanyManager = () => {
           company_website: data.company_website || '',
           company_linkedin: data.company_linkedin || '',
           company_twitter: data.company_twitter || '',
+          company_youtube: data.company_youtube || '',
           company_facebook: data.company_facebook || '',
           company_instagram: data.company_instagram || '',
           founded_year: data.founded_year || new Date().getFullYear(),
@@ -360,16 +362,16 @@ const CompanyManager = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Twitter
+                YouTube
               </label>
               <div className="relative">
-                <Twitter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Youtube className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="url"
-                  value={formData.company_twitter}
-                  onChange={(e) => setFormData(prev => ({ ...prev, company_twitter: e.target.value }))}
+                  value={formData.company_youtube}
+                  onChange={(e) => setFormData(prev => ({ ...prev, company_youtube: e.target.value }))}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  placeholder="https://twitter.com/..."
+                  placeholder="https://youtube.com/..."
                 />
               </div>
             </div>

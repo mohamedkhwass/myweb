@@ -178,6 +178,17 @@ const ServicesManager = () => {
     }));
   };
 
+  const handleAutoSaveImages = async (images: string[]) => {
+    if (editingService) {
+      try {
+        await servicesAPI.update(editingService.id, { images });
+        await fetchServices();
+      } catch (error) {
+        console.error('Error auto-saving service images:', error);
+      }
+    }
+  };
+
   if (loading && services.length === 0) {
     return (
       <div className="flex justify-center items-center py-20">
@@ -510,6 +521,8 @@ const ServicesManager = () => {
                     onImagesChange={(images) => setFormData(prev => ({ ...prev, images }))}
                     uploadPath="services"
                     maxImages={6}
+                    autoSave={!!editingService}
+                    onAutoSave={handleAutoSaveImages}
                   />
                 </div>
 

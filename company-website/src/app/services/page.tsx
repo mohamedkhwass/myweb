@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, CheckCircle } from 'lucide-react';
+import { ArrowRight, CheckCircle, Smartphone, Globe, Database, Cloud, Monitor, Users, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import ImageGallery from '@/components/ImageGallery';
+import ExpandableFeatures from '@/components/ExpandableFeatures';
 import { servicesAPI, Service, companyAPI, CompanyInfo } from '@/lib/supabase';
 
 const ServicesPage = () => {
@@ -51,38 +52,89 @@ const ServicesPage = () => {
     window.open(whatsappUrl, '_blank');
   };
 
+  const getIcon = (iconName: string) => {
+    switch (iconName) {
+      case 'Smartphone':
+        return Smartphone;
+      case 'Globe':
+        return Globe;
+      case 'Database':
+        return Database;
+      case 'Cloud':
+        return Cloud;
+      case 'Monitor':
+        return Monitor;
+      case 'Users':
+        return Users;
+      default:
+        return Smartphone;
+    }
+  };
+
   const defaultServices = [
     {
       id: 1,
-      name: 'تطوير التطبيقات الجوالة',
-      description: 'نطور تطبيقات جوالة احترافية لنظامي Android و iOS باستخدام أحدث التقنيات مثل Flutter و React Native، مع التركيز على تجربة المستخدم وسرعة الأداء.',
+      title: 'تطوير تطبيقات Flutter',
+      short_description: 'تطوير تطبيقات جوالة متقدمة باستخدام Flutter للأندرويد و iOS',
+      description: 'نقدم خدمات تطوير تطبيقات Flutter احترافية مع تصميم عصري وأداء عالي. نضمن تطبيقات سريعة وموثوقة تعمل على جميع المنصات.',
+      icon_name: 'Smartphone',
+      price_starting_from: 2000,
+      currency: 'USD',
       features: ['تطوير تطبيقات جوالة احترافية', 'تصميم مواقع إلكترونية متطورة', 'تطبيقات سطح مكتب قوية', 'دعم فني متواصل'],
-      price: 'حسب المشروع',
-      image_url: null
+      delivery_time: '4-8 أسابيع',
+      is_featured: true,
+      is_active: true,
+      display_order: 1,
+      created_at: '',
+      updated_at: ''
     },
     {
       id: 2,
-      name: 'تطوير المواقع الإلكترونية',
-      description: 'نصمم ونطور مواقع إلكترونية متجاوبة وسريعة باستخدام أحدث تقنيات الويب، مع التركيز على تحسين محركات البحث وتجربة المستخدم المثلى.',
+      title: 'تطوير مواقع الويب',
+      short_description: 'تصميم وتطوير مواقع ويب حديثة ومتجاوبة باستخدام أحدث التقنيات',
+      description: 'نصمم ونطور مواقع ويب احترافية باستخدام Next.js و React مع تركيز على الأداء وتجربة المستخدم.',
+      icon_name: 'Globe',
+      price_starting_from: 1500,
+      currency: 'USD',
       features: ['تطوير تطبيقات جوالة احترافية', 'تصميم مواقع إلكترونية متطورة', 'تطبيقات سطح مكتب قوية', 'دعم فني متواصل'],
-      price: 'حسب المشروع',
-      image_url: null
+      delivery_time: '3-6 أسابيع',
+      is_featured: true,
+      is_active: true,
+      display_order: 2,
+      created_at: '',
+      updated_at: ''
     },
     {
       id: 3,
-      name: 'تطوير تطبيقات سطح المكتب',
-      description: 'نطور تطبيقات سطح مكتب قوية ومستقرة لأنظمة Windows و macOS و Linux، مع واجهات مستخدم حديثة وأداء عالي.',
+      title: 'تطوير تطبيقات سطح المكتب',
+      short_description: 'إنشاء تطبيقات سطح مكتب قوية ومستقرة لجميع أنظمة التشغيل',
+      description: 'نطور تطبيقات سطح مكتب احترافية وقوية لأنظمة Windows و macOS و Linux مع واجهات مستخدم حديثة وأداء عالي.',
+      icon_name: 'Monitor',
+      price_starting_from: 2500,
+      currency: 'USD',
       features: ['تطوير تطبيقات جوالة احترافية', 'تصميم مواقع إلكترونية متطورة', 'تطبيقات سطح مكتب قوية', 'دعم فني متواصل'],
-      price: 'حسب المشروع',
-      image_url: null
+      delivery_time: '6-10 أسابيع',
+      is_featured: false,
+      is_active: true,
+      display_order: 3,
+      created_at: '',
+      updated_at: ''
     },
     {
       id: 4,
-      name: 'الاستشارات التقنية',
+      title: 'الاستشارات التقنية',
+      short_description: 'استشارات متخصصة في التطوير التقني والحلول الرقمية المبتكرة',
       description: 'نقدم استشارات تقنية متخصصة لمساعدة الشركات في اختيار أفضل الحلول التقنية وتطوير استراتيجيات رقمية فعالة.',
+      icon_name: 'Users',
+      price_starting_from: 100,
+      currency: 'USD',
       features: ['تطوير تطبيقات جوالة احترافية', 'تصميم مواقع إلكترونية متطورة', 'تطبيقات سطح مكتب قوية', 'دعم فني متواصل'],
-      price: 'حسب الساعة',
-      image_url: null
+      delivery_time: 'حسب المشروع',
+      is_featured: false,
+      is_active: true,
+      display_order: 4,
+      created_at: '',
+      updated_at: ''
     }
   ];
 
@@ -140,69 +192,98 @@ const ServicesPage = () => {
               ))}
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {displayServices.map((service, index) => (
-                <motion.div
-                  key={service.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
-                >
-                  {/* Service Images */}
-                  {(service.images && service.images.length > 0) || service.image_url ? (
-                    <div className="overflow-hidden rounded-t-xl">
-                      <ImageGallery
-                        images={service.images && service.images.length > 0 ? service.images : service.image_url ? [service.image_url] : []}
-                        alt={service.title || service.name}
-                        autoPlay={true}
-                        autoPlayInterval={4000}
-                        showThumbnails={service.images && service.images.length > 1}
-                        className="h-48"
-                      />
-                    </div>
-                  ) : null}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+              {displayServices.map((service, index) => {
+                const IconComponent = getIcon(service.icon_name || 'Smartphone');
 
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                      {service.name}
-                    </h3>
-
-                    <p className="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
-                      {service.description}
-                    </p>
-
-                    {service.features && (
-                      <div className="mb-4">
-                        <h4 className="font-semibold text-gray-900 dark:text-white mb-2">المميزات:</h4>
-                        <ul className="space-y-1">
-                          {service.features.map((feature, idx) => (
-                            <li key={idx} className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                              <CheckCircle className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
-                              {feature}
-                            </li>
-                          ))}
-                        </ul>
+                return (
+                  <motion.div
+                    key={service.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                    whileHover={{ y: -5 }}
+                    className="card group"
+                  >
+                    <div className="card-body">
+                      {/* Icon & Badge */}
+                      <div className="flex items-start justify-between mb-4 sm:mb-6">
+                        <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-primary-100 dark:bg-primary-900 rounded-lg sm:rounded-xl flex items-center justify-center group-hover:bg-primary-600 transition-colors duration-300">
+                          <IconComponent className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-primary-600 group-hover:text-white transition-colors duration-300" />
+                        </div>
+                        {service.is_featured && (
+                          <span className="badge badge-primary text-xs">مميز</span>
+                        )}
                       </div>
-                    )}
 
-                    <div className="flex items-center justify-between">
-                      <span className="text-lg font-bold text-primary-600">
-                        {service.price || 'حسب المشروع'}
-                      </span>
+                      {/* Content */}
+                      <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-3">
+                        {service.title || service.name}
+                      </h3>
+
+                      <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-4 sm:mb-6 leading-relaxed">
+                        {service.short_description || service.description}
+                      </p>
+
+                      {/* Service Images */}
+                      {service.images && service.images.length > 0 && (
+                        <div className="mb-4 sm:mb-6 overflow-hidden rounded-lg">
+                          <ImageGallery
+                            images={service.images}
+                            alt={service.title || service.name}
+                            autoPlay={true}
+                            autoPlayInterval={4000}
+                            showThumbnails={false}
+                            className="h-24 sm:h-28 md:h-32"
+                          />
+                        </div>
+                      )}
+
+                      {/* Features */}
+                      {service.features && service.features.length > 0 && (
+                        <div className="mb-4 sm:mb-6">
+                          <ExpandableFeatures
+                            features={service.features}
+                            maxVisible={3}
+                            iconType="check"
+                            className="feature-list"
+                          />
+                        </div>
+                      )}
+
+                      {/* Price & Delivery */}
+                      <div className="flex items-center justify-between mb-4 sm:mb-6">
+                        <div>
+                          <div className="text-lg sm:text-xl lg:text-2xl font-bold text-primary-600 dark:text-primary-400">
+                            {service.price_starting_from ? `$${service.price_starting_from}+` : (service.price || 'حسب المشروع')}
+                          </div>
+                          <div className="text-xs sm:text-sm text-gray-500">يبدأ من</div>
+                        </div>
+                        {service.delivery_time && (
+                          <div className="text-right">
+                            <div className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">
+                              {service.delivery_time}
+                            </div>
+                            <div className="text-xs text-gray-500">مدة التسليم</div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* CTA Button */}
                       <motion.button
-                        onClick={() => handleServiceRequest(service.name)}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="btn-outline text-sm"
+                        onClick={() => handleServiceRequest(service.title || service.name)}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="w-full btn-primary flex items-center justify-center space-x-2 rtl:space-x-reverse text-sm sm:text-base py-2 sm:py-3"
                       >
-                        طلب الخدمة
+                        <span>اطلب الخدمة</span>
+                        <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4" />
                       </motion.button>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                );
+              })}
             </div>
           )}
         </div>

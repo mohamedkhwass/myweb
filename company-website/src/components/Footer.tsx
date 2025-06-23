@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Building2, Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Github, Instagram } from 'lucide-react';
+import { Building2, Mail, Phone, MapPin, Facebook, Youtube, Linkedin, Github, Instagram, Globe } from 'lucide-react';
+import Image from 'next/image';
 import { companyAPI, CompanyInfo } from '@/lib/supabase';
 
 const Footer = () => {
@@ -46,9 +47,9 @@ const Footer = () => {
       label: 'Facebook'
     },
     {
-      icon: Twitter,
+      icon: Youtube,
       href: loading ? '#' : (companyInfo?.company_twitter || '#'),
-      label: 'Twitter'
+      label: 'YouTube'
     },
     {
       icon: Linkedin,
@@ -75,8 +76,14 @@ const Footer = () => {
             viewport={{ once: true }}
           >
             <div className="flex items-center space-x-3 rtl:space-x-reverse mb-6">
-              <div className="p-2 bg-primary-600 rounded-lg">
-                <Building2 size={24} />
+              <div className="relative w-12 h-12 bg-white rounded-lg p-1 flex items-center justify-center">
+                <Image
+                  src="/logo.png"
+                  alt="Khwass Tech Logo"
+                  width={40}
+                  height={40}
+                  className="object-contain"
+                />
               </div>
               <div>
                 <h3 className="text-xl font-bold">
@@ -85,9 +92,9 @@ const Footer = () => {
                 <p className="text-sm text-gray-400">للتطوير التقني</p>
               </div>
             </div>
-            
+
             <p className="text-gray-400 mb-6 leading-relaxed">
-              شركة متخصصة في تطوير التطبيقات الجوالة والحلول التقنية المبتكرة. 
+              شركة متخصصة في تطوير التطبيقات الجوالة والحلول التقنية المبتكرة.
               نساعدك في تحويل أفكارك إلى واقع رقمي يحقق أهدافك التجارية.
             </p>
 
@@ -224,7 +231,7 @@ const Footer = () => {
             >
               © {currentYear} {loading ? 'Khwass Tech للتطوير التقني' : (companyInfo?.company_name || 'Khwass Tech')}. جميع الحقوق محفوظة.
             </motion.p>
-            
+
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}

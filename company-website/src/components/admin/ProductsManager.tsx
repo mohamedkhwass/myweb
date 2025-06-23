@@ -23,7 +23,7 @@ const ProductsManager = () => {
     short_description: '',
     price: 0,
     currency: 'USD',
-    product_type: 'app' as 'app' | 'service' | 'subscription',
+    product_type: 'تطبيق' as string,
     category: '',
     features: [] as string[],
     images: [] as string[],
@@ -32,7 +32,7 @@ const ProductsManager = () => {
     is_featured: false,
     is_active: true,
     project_id: null as number | null,
-    subscription_type: 'one-time' as 'monthly' | 'yearly' | 'one-time',
+    subscription_type: 'دفعة واحدة' as string,
     display_order: 0
   });
 
@@ -93,7 +93,7 @@ const ProductsManager = () => {
       is_featured: product.is_featured,
       is_active: product.is_active,
       project_id: product.project_id,
-      subscription_type: product.subscription_type || 'one-time',
+      subscription_type: product.subscription_type || 'دفعة واحدة',
       display_order: product.display_order
     });
     setShowForm(true);
@@ -152,7 +152,7 @@ const ProductsManager = () => {
       short_description: '',
       price: 0,
       currency: 'USD',
-      product_type: 'app',
+      product_type: 'تطبيق',
       category: '',
       features: [],
       images: [],
@@ -161,7 +161,7 @@ const ProductsManager = () => {
       is_featured: false,
       is_active: true,
       project_id: null,
-      subscription_type: 'one-time',
+      subscription_type: 'دفعة واحدة',
       display_order: 0
     });
     setEditingProduct(null);
@@ -189,13 +189,20 @@ const ProductsManager = () => {
     }));
   };
 
-  const getProductTypeLabel = (type: string) => {
-    switch (type) {
-      case 'app': return 'تطبيق';
-      case 'service': return 'خدمة';
-      case 'subscription': return 'اشتراك';
-      default: return type;
+  const handleAutoSaveImages = async (images: string[]) => {
+    if (editingProduct) {
+      try {
+        await productsAPI.update(editingProduct.id, { images });
+        await fetchProducts();
+      } catch (error) {
+        console.error('Error auto-saving product images:', error);
+      }
     }
+  };
+
+  const getProductTypeLabel = (type: string) => {
+    // القيم الآن محفوظة بالعربي في قاعدة البيانات
+    return type || 'غير محدد';
   };
 
   if (loading && products.length === 0) {
@@ -291,7 +298,7 @@ const ProductsManager = () => {
                 </span>
                 {product.subscription_type !== 'one-time' && (
                   <span className="text-sm text-gray-500">
-                    / {product.subscription_type === 'monthly' ? 'شهر' : 'سنة'}
+                    / {product.subscription_type === 'شهري' ? 'شهر' : product.subscription_type === 'سنوي' ? 'سنة' : ''}
                   </span>
                 )}
               </div>
@@ -401,9 +408,11 @@ const ProductsManager = () => {
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       required
                     >
-                      <option value="app">تطبيق</option>
-                      <option value="service">خدمة</option>
-                      <option value="subscription">اشتراك</option>
+                      <option value="تطبيق">تطبيق</option>
+                      <option value="خدمة">خدمة</option>
+                      <option value="اشتراك">اشتراك</option>
+                      <option value="موقع ويب">موقع ويب</option>
+                      <option value="نظام إدارة">نظام إدارة</option>
                     </select>
                   </div>
                   <div>
@@ -436,7 +445,7 @@ const ProductsManager = () => {
                 </div>
 
                 {/* Subscription Type */}
-                {formData.product_type === 'subscription' && (
+                {formData.product_type === 'اشتراك' && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       نوع الاشتراك
@@ -446,9 +455,9 @@ const ProductsManager = () => {
                       onChange={(e) => setFormData(prev => ({ ...prev, subscription_type: e.target.value as any }))}
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     >
-                      <option value="monthly">شهري</option>
-                      <option value="yearly">سنوي</option>
-                      <option value="one-time">دفعة واحدة</option>
+                      <option value="شهري">شهري</option>
+                      <option value="سنوي">سنوي</option>
+                      <option value="دفعة واحدة">دفعة واحدة</option>
                     </select>
                   </div>
                 )}
@@ -523,6 +532,8 @@ const ProductsManager = () => {
                     onImagesChange={(images) => setFormData(prev => ({ ...prev, images }))}
                     uploadPath="products"
                     maxImages={8}
+                    autoSave={!!editingProduct}
+                    onAutoSave={handleAutoSaveImages}
                   />
                 </div>
 

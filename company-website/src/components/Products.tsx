@@ -6,10 +6,13 @@ import { Star, Download, ExternalLink, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { productsAPI, Product } from '@/lib/supabase';
 import ImageGallery from './ImageGallery';
+import ExpandableFeatures from './ExpandableFeatures';
+import { useWhatsApp } from '@/hooks/useWhatsApp';
 
 const Products = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const { createWhatsAppLink, createProductPurchaseMessage } = useWhatsApp();
 
   useEffect(() => {
     fetchProducts();
@@ -146,9 +149,16 @@ const Products = () => {
 
                 <div className="p-4 sm:p-6">
                   <div className="flex items-start justify-between mb-2 sm:mb-3">
-                    <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
-                      {product.name}
-                    </h3>
+                    <div className="flex-1">
+                      <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
+                        {product.name}
+                      </h3>
+                      {product.product_type && (
+                        <span className="inline-block mt-1 px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded text-xs font-medium">
+                          {product.product_type}
+                        </span>
+                      )}
+                    </div>
                     {product.rating && (
                       <div className="flex items-center">
                         <Star className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-400 fill-current" />
@@ -163,24 +173,74 @@ const Products = () => {
                     {product.description}
                   </p>
 
-                  <div className="flex items-center justify-between">
-                    <span className="text-base sm:text-lg font-bold text-primary-600">
-                      {product.price ? `$${product.price}` : 'مجاني'}
-                    </span>
-                    <div className="flex space-x-2 rtl:space-x-reverse">
-                      {product.demo_url && (
-                        <Link href={product.demo_url} target="_blank">
-                          <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="btn-outline text-xs sm:text-sm flex items-center space-x-1 rtl:space-x-reverse py-1 px-2 sm:py-2 sm:px-3"
-                          >
-                            <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
-                            <span>معاينة</span>
-                          </motion.button>
-                        </Link>
+                  {/* Product Features */}
+                  {product.features && product.features.length > 0 && (
+                    <div className="mb-4">
+                      <ExpandableFeatures
+                        features={product.features}
+                        maxVisible={3}
+                        iconType="dot"
+                      />
+                    </div>
+                  )}
+
+                  {/* Action Buttons */}
+                  <div className="flex space-x-1 sm:space-x-2 rtl:space-x-reverse mb-3 sm:mb-4">
+                    {product.demo_url && (
+                      <Link href={product.demo_url} target="_blank" className="flex-1">
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="w-full p-2 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors text-center text-xs sm:text-sm font-medium flex flex-col items-center"
+                        >
+                          <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 mb-1" />
+                          تجربة
+                        </motion.button>
+                      </Link>
+                    )}
+                    <Link
+                      href={createWhatsAppLink(createProductPurchaseMessage(
+                        product.name,
+                        product.product_type || '',
+                        product.price,
+                        product.currency
+                      ))}
+                      target="_blank"
+                      className="flex-1"
+                    >
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="w-full p-2 bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400 rounded-lg hover:bg-green-200 dark:hover:bg-green-800 transition-colors text-center text-xs sm:text-sm font-medium flex flex-col items-center"
+                      >
+                        <Star className="w-3 h-3 sm:w-4 sm:h-4 mb-1" />
+                        {product.product_type === 'اشتراك' ? 'اشتراك' : 'شراء'}
+                      </motion.button>
+                    </Link>
+                  </div>
+
+                  {/* Price and Product Info */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                        <span className="text-base sm:text-lg font-bold text-primary-600">
+                          {product.price ? `$${product.price}` : 'مجاني'}
+                        </span>
+                        <span className="text-xs sm:text-sm text-gray-500">{product.currency}</span>
+                      </div>
+                      {product.product_type && (
+                        <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded text-xs font-medium">
+                          {product.product_type}
+                        </span>
                       )}
                     </div>
+                    {product.subscription_type && product.subscription_type !== 'دفعة واحدة' && (
+                      <div className="flex justify-end">
+                        <span className="px-2 py-1 bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 rounded text-xs font-medium">
+                          {product.subscription_type}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </motion.div>

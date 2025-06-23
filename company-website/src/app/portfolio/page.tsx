@@ -156,21 +156,6 @@ const PortfolioPage = () => {
                       {project.description}
                     </p>
 
-                    {project.technologies && project.technologies.length > 0 && (
-                      <div className="mb-4">
-                        <div className="flex flex-wrap gap-2">
-                          {project.technologies.map((tech, idx) => (
-                            <span
-                              key={idx}
-                              className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs rounded"
-                            >
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
                     {project.completion_date && (
                       <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4">
                         <Calendar className="w-4 h-4 mr-2" />

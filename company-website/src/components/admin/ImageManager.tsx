@@ -12,6 +12,8 @@ interface ImageManagerProps {
   uploadPath: string;
   maxImages?: number;
   className?: string;
+  autoSave?: boolean;
+  onAutoSave?: (images: string[]) => Promise<void>;
 }
 
 const ImageManager = ({
@@ -19,7 +21,9 @@ const ImageManager = ({
   onImagesChange,
   uploadPath,
   maxImages = 10,
-  className = ''
+  className = '',
+  autoSave = false,
+  onAutoSave
 }: ImageManagerProps) => {
   const [uploading, setUploading] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
@@ -113,7 +117,13 @@ const ImageManager = ({
   const removeImage = async (imageUrl: string) => {
     try {
       await storageAPI.deleteImage(imageUrl);
-      onImagesChange(images.filter(img => img !== imageUrl));
+      const newImages = images.filter(img => img !== imageUrl);
+      onImagesChange(newImages);
+
+      // إذا كان الحفظ التلقائي مفعل، احفظ التغييرات فوراً
+      if (autoSave && onAutoSave) {
+        await onAutoSave(newImages);
+      }
     } catch (error) {
       console.error('Error removing image:', error);
     }

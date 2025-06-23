@@ -179,6 +179,17 @@ const ProjectsManager = () => {
     }));
   };
 
+  const handleAutoSaveImages = async (images: string[]) => {
+    if (editingProject) {
+      try {
+        await projectsAPI.update(editingProject.id, { images });
+        await fetchProjects();
+      } catch (error) {
+        console.error('Error auto-saving project images:', error);
+      }
+    }
+  };
+
   if (loading && projects.length === 0) {
     return (
       <div className="flex justify-center items-center py-20">
@@ -470,6 +481,8 @@ const ProjectsManager = () => {
                     onImagesChange={(images) => setFormData(prev => ({ ...prev, images }))}
                     uploadPath="projects"
                     maxImages={10}
+                    autoSave={!!editingProject}
+                    onAutoSave={handleAutoSaveImages}
                   />
                 </div>
 

@@ -123,26 +123,9 @@ const Portfolio: React.FC = () => {
                     )}
                   </div>
 
-                  <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3">
+                  <p className="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
                     {project.description}
                   </p>
-
-                  {/* Technologies */}
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {project.technologies.slice(0, 3).map((tech, techIndex) => (
-                      <span
-                        key={techIndex}
-                        className="px-2 py-1 bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 rounded text-xs font-medium"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                    {project.technologies.length > 3 && (
-                      <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded text-xs">
-                        +{project.technologies.length - 3}
-                      </span>
-                    )}
-                  </div>
 
                   {/* Category */}
                   <div className="text-sm text-gray-500 dark:text-gray-400">

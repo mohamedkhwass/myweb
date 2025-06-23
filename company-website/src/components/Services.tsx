@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Smartphone, Globe, Database, Cloud, Monitor, Users, ArrowLeft, CheckCircle } from 'lucide-react';
 import { servicesAPI, Service, companyAPI, CompanyInfo } from '@/lib/supabase';
 import ImageGallery from './ImageGallery';
+import ExpandableFeatures from './ExpandableFeatures';
 
 const Services = () => {
   const [services, setServices] = useState<Service[]>([]);
@@ -223,18 +224,13 @@ const Services = () => {
 
                   {/* Features */}
                   {service.features && service.features.length > 0 && (
-                    <div className="feature-list mb-4 sm:mb-6">
-                      {service.features.slice(0, 2).map((feature, featureIndex) => (
-                        <div key={featureIndex} className="feature-item">
-                          <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 feature-icon" />
-                          <span className="text-xs sm:text-sm">{feature}</span>
-                        </div>
-                      ))}
-                      {service.features.length > 2 && (
-                        <div className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">
-                          +{service.features.length - 2} ميزة أخرى
-                        </div>
-                      )}
+                    <div className="mb-4 sm:mb-6">
+                      <ExpandableFeatures
+                        features={service.features}
+                        maxVisible={3}
+                        iconType="check"
+                        className="feature-list"
+                      />
                     </div>
                   )}
 

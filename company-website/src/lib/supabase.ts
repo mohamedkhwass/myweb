@@ -36,6 +36,7 @@ export interface CompanyInfo {
   company_website?: string
   company_linkedin?: string
   company_twitter?: string
+  company_youtube?: string
   company_facebook?: string
   company_instagram?: string
   founded_year?: number
@@ -289,33 +290,83 @@ export const productsAPI = {
   },
 
   async update(id: number, product: Partial<Product>): Promise<Product | null> {
-    const { data, error } = await supabase
-      .from('products')
-      .update(product)
-      .eq('id', id)
-      .select()
-      .single()
+    try {
+      // إذا كان التحديث يتضمن الصور، احذف الصور القديمة التي لم تعد موجودة
+      if (product.images) {
+        const { data: currentProduct, error: fetchError } = await supabase
+          .from('products')
+          .select('images')
+          .eq('id', id)
+          .single()
 
-    if (error) {
-      console.error('Error updating product:', error)
+        if (!fetchError && currentProduct?.images) {
+          const oldImages = currentProduct.images || []
+          const newImages = product.images || []
+          const imagesToDelete = oldImages.filter(img => !newImages.includes(img))
+
+          // احذف الصور المحذوفة من التخزين
+          for (const imageUrl of imagesToDelete) {
+            await storageAPI.deleteImage(imageUrl)
+          }
+        }
+      }
+
+      const { data, error } = await supabase
+        .from('products')
+        .update(product)
+        .eq('id', id)
+        .select()
+        .single()
+
+      if (error) {
+        console.error('Error updating product:', error)
+        return null
+      }
+
+      return data
+    } catch (error) {
+      console.error('Error in product update process:', error)
       return null
     }
-
-    return data
   },
 
   async delete(id: number): Promise<boolean> {
-    const { error } = await supabase
-      .from('products')
-      .delete()
-      .eq('id', id)
+    try {
+      // أولاً، احصل على بيانات المنتج لحذف الصور
+      const { data: product, error: fetchError } = await supabase
+        .from('products')
+        .select('images')
+        .eq('id', id)
+        .single()
 
-    if (error) {
-      console.error('Error deleting product:', error)
+      if (fetchError) {
+        console.error('Error fetching product for deletion:', fetchError)
+        return false
+      }
+
+      // احذف الصور من التخزين
+      if (product?.images && product.images.length > 0) {
+        for (const imageUrl of product.images) {
+          await storageAPI.deleteImage(imageUrl)
+        }
+      }
+
+      // ثم احذف المنتج من قاعدة البيانات
+      const { error } = await supabase
+        .from('products')
+        .delete()
+        .eq('id', id)
+
+      if (error) {
+        console.error('Error deleting product:', error)
+        return false
+      }
+
+      return true
+    } catch (error) {
+      console.error('Error in product deletion process:', error)
       return false
     }
-
-    return true
   }
 }
 
@@ -367,33 +418,83 @@ export const servicesAPI = {
   },
 
   async update(id: number, service: Partial<Service>): Promise<Service | null> {
-    const { data, error } = await supabase
-      .from('services')
-      .update(service)
-      .eq('id', id)
-      .select()
-      .single()
+    try {
+      // إذا كان التحديث يتضمن الصور، احذف الصور القديمة التي لم تعد موجودة
+      if (service.images) {
+        const { data: currentService, error: fetchError } = await supabase
+          .from('services')
+          .select('images')
+          .eq('id', id)
+          .single()
 
-    if (error) {
-      console.error('Error updating service:', error)
+        if (!fetchError && currentService?.images) {
+          const oldImages = currentService.images || []
+          const newImages = service.images || []
+          const imagesToDelete = oldImages.filter(img => !newImages.includes(img))
+
+          // احذف الصور المحذوفة من التخزين
+          for (const imageUrl of imagesToDelete) {
+            await storageAPI.deleteImage(imageUrl)
+          }
+        }
+      }
+
+      const { data, error } = await supabase
+        .from('services')
+        .update(service)
+        .eq('id', id)
+        .select()
+        .single()
+
+      if (error) {
+        console.error('Error updating service:', error)
+        return null
+      }
+
+      return data
+    } catch (error) {
+      console.error('Error in service update process:', error)
       return null
     }
-
-    return data
   },
 
   async delete(id: number): Promise<boolean> {
-    const { error } = await supabase
-      .from('services')
-      .delete()
-      .eq('id', id)
+    try {
+      // أولاً، احصل على بيانات الخدمة لحذف الصور
+      const { data: service, error: fetchError } = await supabase
+        .from('services')
+        .select('images')
+        .eq('id', id)
+        .single()
 
-    if (error) {
-      console.error('Error deleting service:', error)
+      if (fetchError) {
+        console.error('Error fetching service for deletion:', fetchError)
+        return false
+      }
+
+      // احذف الصور من التخزين
+      if (service?.images && service.images.length > 0) {
+        for (const imageUrl of service.images) {
+          await storageAPI.deleteImage(imageUrl)
+        }
+      }
+
+      // ثم احذف الخدمة من قاعدة البيانات
+      const { error } = await supabase
+        .from('services')
+        .delete()
+        .eq('id', id)
+
+      if (error) {
+        console.error('Error deleting service:', error)
+        return false
+      }
+
+      return true
+    } catch (error) {
+      console.error('Error in service deletion process:', error)
       return false
     }
-
-    return true
   }
 }
 
@@ -427,13 +528,36 @@ export const storageAPI = {
 
   async deleteImage(url: string): Promise<boolean> {
     try {
-      const path = url.split('/').slice(-2).join('/')
+      if (!url || url.trim() === '') {
+        return true // لا توجد صورة للحذف
+      }
+
+      // استخراج المسار من الرابط
+      let path = '';
+
+      if (url.includes('supabase')) {
+        // إذا كان الرابط من Supabase
+        const urlParts = url.split('/');
+        const bucketIndex = urlParts.findIndex(part => part === 'images');
+        if (bucketIndex !== -1 && bucketIndex < urlParts.length - 1) {
+          path = urlParts.slice(bucketIndex + 1).join('/');
+        }
+      } else {
+        // طريقة بديلة لاستخراج المسار
+        path = url.split('/').slice(-2).join('/');
+      }
+
+      if (!path) {
+        console.error('Could not extract path from URL:', url);
+        return false;
+      }
+
       const { error } = await supabase.storage
         .from('images')
         .remove([path])
 
       if (error) {
-        console.error('Error deleting image:', error)
+        console.error('Error deleting image:', error, 'Path:', path);
         return false
       }
 
@@ -537,32 +661,96 @@ export const projectsAPI = {
   },
 
   async update(id: number, project: Partial<Project>): Promise<Project | null> {
-    const { data, error } = await supabase
-      .from('projects')
-      .update(project)
-      .eq('id', id)
-      .select()
-      .single()
+    try {
+      // إذا كان التحديث يتضمن الصور، احذف الصور القديمة التي لم تعد موجودة
+      if (project.images || project.image_url !== undefined) {
+        const { data: currentProject, error: fetchError } = await supabase
+          .from('projects')
+          .select('images, image_url')
+          .eq('id', id)
+          .single()
 
-    if (error) {
-      console.error('Error updating project:', error)
+        if (!fetchError && currentProject) {
+          // احذف الصور المحذوفة من قائمة الصور
+          if (project.images) {
+            const oldImages = currentProject.images || []
+            const newImages = project.images || []
+            const imagesToDelete = oldImages.filter(img => !newImages.includes(img))
+
+            for (const imageUrl of imagesToDelete) {
+              await storageAPI.deleteImage(imageUrl)
+            }
+          }
+
+          // احذف الصورة الرئيسية إذا تم تغييرها
+          if (project.image_url !== undefined &&
+              currentProject.image_url &&
+              currentProject.image_url !== project.image_url) {
+            await storageAPI.deleteImage(currentProject.image_url)
+          }
+        }
+      }
+
+      const { data, error } = await supabase
+        .from('projects')
+        .update(project)
+        .eq('id', id)
+        .select()
+        .single()
+
+      if (error) {
+        console.error('Error updating project:', error)
+        return null
+      }
+
+      return data
+    } catch (error) {
+      console.error('Error in project update process:', error)
       return null
     }
-
-    return data
   },
 
   async delete(id: number): Promise<boolean> {
-    const { error } = await supabase
-      .from('projects')
-      .delete()
-      .eq('id', id)
+    try {
+      // أولاً، احصل على بيانات المشروع لحذف الصور
+      const { data: project, error: fetchError } = await supabase
+        .from('projects')
+        .select('images, image_url')
+        .eq('id', id)
+        .single()
 
-    if (error) {
-      console.error('Error deleting project:', error)
+      if (fetchError) {
+        console.error('Error fetching project for deletion:', fetchError)
+        return false
+      }
+
+      // احذف الصور من التخزين
+      if (project?.images && project.images.length > 0) {
+        for (const imageUrl of project.images) {
+          await storageAPI.deleteImage(imageUrl)
+        }
+      }
+
+      // احذف الصورة الرئيسية إذا كانت موجودة
+      if (project?.image_url) {
+        await storageAPI.deleteImage(project.image_url)
+      }
+
+      // ثم احذف المشروع من قاعدة البيانات
+      const { error } = await supabase
+        .from('projects')
+        .delete()
+        .eq('id', id)
+
+      if (error) {
+        console.error('Error deleting project:', error)
+        return false
+      }
+
+      return true
+    } catch (error) {
+      console.error('Error in project deletion process:', error)
       return false
     }
-
-    return true
   }
 }
